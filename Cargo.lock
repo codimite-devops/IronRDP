@@ -2338,6 +2338,7 @@ dependencies = [
  "ironrdp-graphics",
  "ironrdp-input",
  "ironrdp-pdu",
+ "ironrdp-rail",
  "ironrdp-rdpdr",
  "ironrdp-rdpsnd",
  "ironrdp-server",
@@ -2654,6 +2655,19 @@ name = "ironrdp-propertyset"
 version = "0.1.0"
 dependencies = [
  "tracing",
+]
+
+[[package]]
+name = "ironrdp-rail"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "bitflags 2.9.1",
+ "ironrdp-core",
+ "ironrdp-pdu",
+ "ironrdp-svc",
+ "num-derive",
+ "num-traits",
 ]
 
 [[package]]

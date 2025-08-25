@@ -1,0 +1,33 @@
+[package]
+name = "ironrdp-rail"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+description = "RAIL (Remote Application Integrated Locally) protocol implementation for IronRDP"
+authors = ["Devolutions Inc. <developers@devolutions.net>"]
+license = "MIT OR Apache-2.0"
+homepage = "https://github.com/Devolutions/IronRDP"
+repository = "https://github.com/Devolutions/IronRDP"
+documentation = "https://docs.rs/ironrdp-rail"
+readme = "README.md"
+keywords = ["rdp", "rail", "remoteapp", "protocol"]
+categories = ["network-programming"]
+
+[lints]
+workspace = true
+
+[dependencies]
+ironrdp-core = { path = "../ironrdp-core", version = "0.1" }
+ironrdp-svc = { path = "../ironrdp-svc", version = "0.4", features = ["std"] }
+ironrdp-pdu = { path = "../ironrdp-pdu", version = "0.5" }
+
+bitflags = "2.6"
+num-derive = "0.4"
+num-traits = "0.2"
+
+[features]
+default = ["std"]
+std = ["ironrdp-core/std", "ironrdp-svc/std"]
+
+[dev-dependencies]
+anyhow = "1.0"
