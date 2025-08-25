@@ -23,6 +23,7 @@ mod multifragment_update;
 mod offscreen_bitmap_cache;
 mod order;
 mod pointer;
+mod rail;
 mod sound;
 mod surface_commands;
 mod virtual_channel;
@@ -46,6 +47,7 @@ pub use self::multifragment_update::MultifragmentUpdate;
 pub use self::offscreen_bitmap_cache::OffscreenBitmapCache;
 pub use self::order::{Order, OrderFlags, OrderSupportExFlags, OrderSupportIndex};
 pub use self::pointer::Pointer;
+pub use self::rail::{Rail, RailSupportLevel};
 pub use self::sound::{Sound, SoundFlags};
 pub use self::surface_commands::{CmdFlags, SurfaceCommands};
 pub use self::virtual_channel::{VirtualChannel, VirtualChannelFlags};
@@ -276,7 +278,7 @@ pub enum CapabilitySet {
     ColorCache(Vec<u8>),
     DrawNineGridCache(Vec<u8>),
     DrawGdiPlus(Vec<u8>),
-    Rail(Vec<u8>),
+    Rail(Rail),
     WindowList(Vec<u8>),
     BitmapCacheV3(Vec<u8>),
 }
@@ -428,6 +430,14 @@ impl Encode for CapabilitySet {
                 )?);
                 capset.encode(dst)?;
             }
+            CapabilitySet::Rail(capset) => {
+                dst.write_u16(CapabilitySetType::Rail.to_u16().unwrap());
+                dst.write_u16(cast_length!(
+                    "len",
+                    capset.size() + CAPABILITY_SET_TYPE_FIELD_SIZE + CAPABILITY_SET_LENGTH_FIELD_SIZE
+                )?);
+                capset.encode(dst)?;
+            }
             _ => {
                 let (capability_set_type, capability_set_buffer) = match self {
                     CapabilitySet::Control(buffer) => (CapabilitySetType::Control, buffer),
@@ -441,7 +451,6 @@ impl Encode for CapabilitySet {
                     CapabilitySet::ColorCache(buffer) => (CapabilitySetType::ColorCache, buffer),
                     CapabilitySet::DrawNineGridCache(buffer) => (CapabilitySetType::DrawNineGridCache, buffer),
                     CapabilitySet::DrawGdiPlus(buffer) => (CapabilitySetType::DrawGdiPlus, buffer),
-                    CapabilitySet::Rail(buffer) => (CapabilitySetType::Rail, buffer),
                     CapabilitySet::WindowList(buffer) => (CapabilitySetType::WindowList, buffer),
                     _ => unreachable!(),
                 };
@@ -481,6 +490,7 @@ impl Encode for CapabilitySet {
                 CapabilitySet::MultiFragmentUpdate(capset) => capset.size(),
                 CapabilitySet::LargePointer(capset) => capset.size(),
                 CapabilitySet::FrameAcknowledge(capset) => capset.size(),
+                CapabilitySet::Rail(capset) => capset.size(),
                 CapabilitySet::Control(buffer)
                 | CapabilitySet::WindowActivation(buffer)
                 | CapabilitySet::Share(buffer)
@@ -490,7 +500,6 @@ impl Encode for CapabilitySet {
                 | CapabilitySet::ColorCache(buffer)
                 | CapabilitySet::DrawNineGridCache(buffer)
                 | CapabilitySet::DrawGdiPlus(buffer)
-                | CapabilitySet::Rail(buffer)
                 | CapabilitySet::WindowList(buffer)
                 | CapabilitySet::BitmapCacheV3(buffer) => buffer.len(),
             }
@@ -554,7 +563,7 @@ impl<'de> Decode<'de> for CapabilitySet {
             CapabilitySetType::ColorCache => Ok(CapabilitySet::ColorCache(capability_set_buffer.into())),
             CapabilitySetType::DrawNineGridCache => Ok(CapabilitySet::DrawNineGridCache(capability_set_buffer.into())),
             CapabilitySetType::DrawGdiPlus => Ok(CapabilitySet::DrawGdiPlus(capability_set_buffer.into())),
-            CapabilitySetType::Rail => Ok(CapabilitySet::Rail(capability_set_buffer.into())),
+            CapabilitySetType::Rail => Ok(CapabilitySet::Rail(decode(capability_set_buffer)?)),
             CapabilitySetType::WindowList => Ok(CapabilitySet::WindowList(capability_set_buffer.into())),
             CapabilitySetType::FrameAcknowledge => Ok(CapabilitySet::FrameAcknowledge(decode(capability_set_buffer)?)),
             CapabilitySetType::BitmapCacheV3CodecID => Ok(CapabilitySet::BitmapCacheV3(capability_set_buffer.into())),

@@ -30,6 +30,7 @@ svc = ["dep:ironrdp-svc"]
 dvc = ["dep:ironrdp-dvc"]
 rdpdr = ["dep:ironrdp-rdpdr"]
 rdpsnd = ["dep:ironrdp-rdpsnd"]
+rail = ["dep:ironrdp-rail"]
 displaycontrol = ["dep:ironrdp-displaycontrol"]
 qoi = ["ironrdp-server?/qoi", "ironrdp-pdu?/qoi", "ironrdp-connector?/qoi", "ironrdp-session?/qoi"]
 qoiz = ["ironrdp-server?/qoiz", "ironrdp-pdu?/qoiz", "ironrdp-connector?/qoiz", "ironrdp-session?/qoiz"]
@@ -51,6 +52,7 @@ ironrdp-svc = { path = "../ironrdp-svc", version = "0.4", optional = true } # pu
 ironrdp-dvc = { path = "../ironrdp-dvc", version = "0.3", optional = true } # public
 ironrdp-rdpdr = { path = "../ironrdp-rdpdr", version = "0.3", optional = true } # public
 ironrdp-rdpsnd = { path = "../ironrdp-rdpsnd", version = "0.5", optional = true } # public
+ironrdp-rail = { path = "../ironrdp-rail", version = "0.1", optional = true } # public
 ironrdp-displaycontrol = { path = "../ironrdp-displaycontrol", version = "0.3", optional = true } # public
 
 [dev-dependencies]

@@ -280,7 +280,7 @@ lazy_static! {
                 CapabilitySet::BitmapCacheHostSupport(SERVER_BITMAP_CACHE_HOST_SUPPORT_CAPABILITY_SET.to_vec()),
                 CapabilitySet::Pointer(decode(SERVER_POINTER_CAPABILITY_SET.as_ref()).unwrap()),
                 CapabilitySet::Input(decode(SERVER_INPUT_CAPABILITY_SET.as_ref()).unwrap()),
-                CapabilitySet::Rail(SERVER_RAIL_CAPABILITY_SET.to_vec()),
+                CapabilitySet::Rail(decode(SERVER_RAIL_CAPABILITY_SET.as_ref()).unwrap()),
                 CapabilitySet::WindowList(SERVER_WINDOW_LIST_CAPABILITY_SET.to_vec()),
             ],
         }
