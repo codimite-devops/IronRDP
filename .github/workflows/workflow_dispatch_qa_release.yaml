@@ -1,0 +1,41 @@
+name: qa-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch_name:
+        description: "Release branch (empty = the branch this workflow runs from)"
+        required: false
+        default: ""
+      services:
+        description: "Services to release, comma separated, or 'all'"
+        required: false
+        default: "all"
+      auto_merge:
+        description: "Auto-merge the deployment PR"
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  qa-release:
+    permissions:
+      contents: write
+      id-token: write
+      # Required by the SLSA provenance generator.
+      actions: read
+      packages: write
+    uses: codimite-devops/codimite-gen-actions-core/.github/workflows/workflow_call_qa_release.yaml@main
+    with:
+      branch_name: ${{ inputs.branch_name || github.ref_name }}
+      services: ${{ inputs.services }}
+      config_file: ".github/configs.yaml"
+      environment: "qa"
+      auto_merge: ${{ inputs.auto_merge }}
+      # There is no QA namespace in the cluster: build, tag and record the release
+      # manifest so stage can promote it, but don't touch any helmfile.
+      update_helmfile: true
+    secrets:
+      CODIMITE_GKE_APP_INSTALLATION_ID: ${{ secrets.CODIMITE_GKE_APP_INSTALLATION_ID }}
+      CODIMITE_GKE_BOT_APP_ID: ${{ secrets.CODIMITE_GKE_BOT_APP_ID }}
+      CODIMITE_GKE_BOT_PRIVATE_KEY: ${{ secrets.CODIMITE_GKE_BOT_PRIVATE_KEY }}

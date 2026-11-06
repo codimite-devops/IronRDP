@@ -1,0 +1,49 @@
+# Copy this file into the consuming repo's .github/workflows/ directory.
+#
+# Each environment's databases come from .github/configs.yaml (releasectl 1.3.0 or later):
+#
+#   repository_environments:
+#     - dev:
+#         databases:
+#           - name: main                                       # the Postgres database name
+#             type: sql                                        # Postgres
+#             migrationsDir: db/migrations/main
+#             connectionString: my-project:asia-south1:main-db # Cloud SQL instance connection name
+#             iamServiceAccount: db-mig@my-project.iam.gserviceaccount.com
+#             workloadIdentityProvider: projects/123/locations/global/workloadIdentityPools/github-pool/providers/github-provider  # defaults to GCP_DB_MIG_WIF_PROVIDER
+#             vpnProvider: TS                                  # Tailscale
+#             tsAudience: api.tailscale.com/xxxx
+#             tsClientID: xxxx
+#             tsRouterIP: 100.64.0.1                           # optional
+#             tsTags:
+#               - tag:db-migrations
+#
+# Each environment also needs the DB_QUOTA_PROJECT variable.
+name: Goose Migrations
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment to run `goose status` against and request approval for.
+        type: environment
+        required: true
+      auto_approve:
+        description: Apply the migrations in this run, without waiting for `/approve`.
+        type: boolean
+        default: false
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  id-token: write
+  issues: write
+
+jobs:
+  goose:
+    uses: codimite-devops/codimite-gen-actions-core/.github/workflows/workflow_call_goose_migrations.yaml@main
+    with:
+      environment: ${{ inputs.environment }}
+      auto_approve: ${{ inputs.auto_approve || false }}
+    secrets: inherit

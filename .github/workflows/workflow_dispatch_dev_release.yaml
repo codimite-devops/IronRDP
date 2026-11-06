@@ -1,0 +1,37 @@
+name: dev-release
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "The git reference to use for the dev release"
+        required: true
+        default: "main"
+      auto_merge:
+        description: "Whether to enable auto merge for the dev release"
+        required: false
+        default: false
+        type: boolean
+      services:
+        description: "The services for build comma separated"
+        required: false
+        default: "all"
+
+jobs:
+  dev-release:
+    permissions: 
+      contents: read
+      id-token: write
+      # Required by the SLSA provenance generator.
+      actions: read
+      packages: write
+    uses: codimite-devops/codimite-gen-actions-core/.github/workflows/workflow_call_dev_build.yaml@main
+    with:
+      ref: ${{ github.event.inputs.ref }}
+      services: ${{ github.event.inputs.services }}
+      config_file: ".github/configs.yaml"
+      environment: "dev"
+      auto_merge: ${{ inputs.auto_merge }}
+    secrets:
+      CODIMITE_GKE_APP_INSTALLATION_ID: ${{ secrets.CODIMITE_GKE_APP_INSTALLATION_ID }}
+      CODIMITE_GKE_BOT_APP_ID: ${{ secrets.CODIMITE_GKE_BOT_APP_ID }}
+      CODIMITE_GKE_BOT_PRIVATE_KEY: ${{ secrets.CODIMITE_GKE_BOT_PRIVATE_KEY }}

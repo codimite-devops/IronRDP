@@ -1,0 +1,48 @@
+# Fill this in, then rename it to configs.yaml.
+repository_environments:
+  - dev:
+      ARTIFACTORY_PROJECT_ID: ""
+      ARTIFACTORY_REPO_ID: ""
+      ARTIFACTORY_WIF_PROVIDER: ""
+      ARTIFACTORY_WIF_SA: ""
+      DEPLOY_REPO: "codimite-devops/codimite-platform-cluster-project-configurations"
+      NAMESPACE: ""
+      PROJECT_DIR: ""
+
+  - qa:
+      ARTIFACTORY_PROJECT_ID: ""
+      ARTIFACTORY_REPO_ID: ""
+      ARTIFACTORY_WIF_PROVIDER: ""
+      ARTIFACTORY_WIF_SA: ""
+      DEPLOY_REPO: "codimite-devops/codimite-platform-cluster-project-configurations"
+      NAMESPACE: ""
+      PROJECT_DIR: ""
+
+  - stage:
+      ARTIFACTORY_PROJECT_ID: ""
+      ARTIFACTORY_REPO_ID: ""
+      ARTIFACTORY_WIF_PROVIDER: ""
+      ARTIFACTORY_WIF_SA: ""
+      DEPLOY_REPO: "codimite-devops/codimite-platform-cluster-project-configurations"
+      NAMESPACE: ""
+      PROJECT_DIR: ""
+
+  - prod:
+      ARTIFACTORY_PROJECT_ID: ""
+      ARTIFACTORY_REPO_ID: ""
+      ARTIFACTORY_WIF_PROVIDER: ""
+      ARTIFACTORY_WIF_SA: ""
+      DEPLOY_REPO: "codimite-devops/codimite-platform-cluster-project-configurations"
+      NAMESPACE: ""
+      PROJECT_DIR: ""
+
+services:
+  - name: my-service
+    dockerfile: ./Dockerfile
+    image_name: my-service
+    helmfile_name: my-service.yaml
+    envs:
+      dev: ./.github/envs/my-service/dev.yaml
+      qa: ./.github/envs/my-service/qa.yaml
+      stage: ./.github/envs/my-service/stage.yaml
+      prod: ./.github/envs/my-service/prod.yaml

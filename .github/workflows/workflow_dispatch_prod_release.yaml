@@ -1,0 +1,32 @@
+name: prod-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      services:
+        description: "Services to release, comma separated, or 'all'. Each is released at the build stage runs (from the release manifest)"
+        required: false
+        default: "all"
+      enable_backport_prs:
+        description: "Open PRs to sync the released commit back to main/develop"
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  prod-release:
+    permissions:
+      contents: write
+      id-token: write
+      pull-requests: write
+    uses: codimite-devops/codimite-gen-actions-core/.github/workflows/workflow_call_prod_release.yaml@main
+    with:
+      services: ${{ inputs.services }}
+      config_file: ".github/configs.yaml"
+      environment: "prod"
+      source_environment: "stage"
+      enable_backport_prs: ${{ inputs.enable_backport_prs }}
+    secrets:
+      CODIMITE_GKE_APP_INSTALLATION_ID: ${{ secrets.CODIMITE_GKE_APP_INSTALLATION_ID }}
+      CODIMITE_GKE_BOT_APP_ID: ${{ secrets.CODIMITE_GKE_BOT_APP_ID }}
+      CODIMITE_GKE_BOT_PRIVATE_KEY: ${{ secrets.CODIMITE_GKE_BOT_PRIVATE_KEY }}

@@ -1,0 +1,18 @@
+name: github-environment-setup
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/configs.yaml"
+
+jobs:
+  setup-environment:
+    permissions:
+      contents: write
+    uses: codimite-devops/codimite-gen-actions-core/.github/workflows/workflow_call_create_gh_env.yaml@main
+    with:
+      file_path: ".github/configs.yaml"
+      ref: ${{ github.event.base_ref }}
+    secrets: inherit
